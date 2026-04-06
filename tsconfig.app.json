@@ -19,7 +19,18 @@
     "noUnusedLocals": true,
     "noUnusedParameters": true,
     "erasableSyntaxOnly": true,
-    "noFallthroughCasesInSwitch": true
+    "noFallthroughCasesInSwitch": true,  
+    
+    // Path aliases
+    "paths": {
+      "@utils": ["./src/utils/index.ts"],
+      "@constants": ["./src/constants/index.ts"],
+      "@components": ["./src/components/index.ts"],
+      "@contexts": ["./src/contexts/index.ts"],
+      "@pages": ["./src/pages/index.ts"],
+    }
   },
-  "include": ["src"]
+  "include": ["src"],
+
+
 }
