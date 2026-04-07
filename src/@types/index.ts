@@ -1,1 +1,3 @@
-export type { TVisitStatus } from './status'
+export type { TStepStatus, TVisitStatus } from './status'
+
+export type { IEquipment } from './equipment'

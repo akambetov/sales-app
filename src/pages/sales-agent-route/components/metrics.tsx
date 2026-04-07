@@ -1,5 +1,4 @@
-import { MetricCard } from './metric-card'
-import { MetricCardSkeleton } from './skeleton'
+import { MetricCard, MetricCardSkeleton } from './metric-card'
 
 export const Metrics = ({
   metrics,

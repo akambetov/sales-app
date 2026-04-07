@@ -1,7 +1,5 @@
 import { cn } from '@utils'
 
-import { RouterStatsFilterSkeleton } from './skeleton/router-stats-filter-skeleton'
-
 import type { IRouteStats } from '../@types'
 
 export const RouteStatsFilter = ({
@@ -22,7 +20,9 @@ export const RouteStatsFilter = ({
       { label: 'Приоритет', count: routeStats.priority }
     ].map((item) =>
       isLoading ? (
-        <RouterStatsFilterSkeleton key={item.label} />
+        <div key={item.label} className={cn('animate-pulse rounded bg-slate-50 p-2')}>
+          <div className="w-20 h-6 mb-2 rounded bg-slate-200" />
+        </div>
       ) : (
         <button
           key={item.label}

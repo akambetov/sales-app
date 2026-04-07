@@ -25,3 +25,10 @@ export const MetricCard = ({
     <div className="mt-1 text-lg font-semibold text-slate-900">{value}</div>
   </Card>
 )
+
+export const MetricCardSkeleton = () => (
+  <div className={cn('animate-pulse bg-linear-to-br rounded bg-slate-50 p-2')}>
+    <div className="h-3 bg-slate-200 rounded w-1/2 mb-2" />
+    <div className="h-5 bg-slate-200 rounded w-1/3" />
+  </div>
+)

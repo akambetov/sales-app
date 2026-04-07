@@ -3,9 +3,9 @@ import { useMemo } from 'react'
 
 import { Header, Avatar, Card } from '@components'
 import { useUser } from '@contexts'
+import { cn } from '@utils'
 
-import { Metrics } from './components'
-import { RouteStatsFilter } from './components/route-stats-filter'
+import { Metrics, RouteStatsFilter, StoreCards, StoreCardsSkeleton } from './components'
 import { useStoresQuery } from './query'
 
 import type { IRouteStats } from './@types'
@@ -36,7 +36,6 @@ const SalesAgentRoute = () => {
       const overdue = stores.filter((s) => s.status === 'Просрочен').length
       const withDebt = stores.filter((s) => s.debt > 0).length
       const priority = stores.filter((s) => s.priority).length
-
       const left = total - done - inProgress
 
       return { total, notStarted, inProgress, done, overdue, withDebt, priority, left }
@@ -69,126 +68,41 @@ const SalesAgentRoute = () => {
               </div>
               <div className="rounded-2xl bg-white/10 px-3 py-2 text-right">
                 <div className="text-[11px] text-slate-300">Прогресс дня</div>
-                <div className="text-base font-semibold">
-                  {/* {routeStats.done}/{routeStats.total} */}
+                <div
+                  className={cn(
+                    'text-base font-semibold',
+                    isLoading ? 'animate-pulse rounded bg-slate-200 text-transparent mt-2' : ''
+                  )}
+                >
+                  {routeStats.done}/{routeStats.total}
                 </div>
               </div>
             </div>
             <div className="mt-4 h-2 rounded-full bg-white/10">
               <div
-                className="h-2 rounded-full bg-white"
-                // style={{ width: `${(routeStats.done / routeStats.total) * 100}%` }}
+                className={cn(
+                  'h-2 rounded-full',
+                  isLoading ? 'animate-pulse bg-slate-200' : 'bg-white'
+                )}
+                style={{
+                  width: `${(routeStats.done / routeStats.total) * 100}%`
+                }}
               />
             </div>
           </div>
         </Card>
         <Metrics metrics={routeStats} isLoading={isLoading} />
+        {/* <Card className="p-3">
+          <div className="flex items-center gap-2 rounded-2xl bg-slate-50 px-3 py-2.5">
+            <Search size={16} className="text-slate-400" />
+            <input
+              placeholder="Поиск по ТТ, договору, адресу"
+              className="w-full bg-transparent text-sm outline-none placeholder:text-slate-400"
+            />
+          </div>
+        </Card> */}
         <RouteStatsFilter routeStats={routeStats} isLoading={isLoading} />
-
-        {/* 
-
-      <Card className="p-3">
-        <div className="flex items-center gap-2 rounded-2xl bg-slate-50 px-3 py-2.5">
-          <Search size={16} className="text-slate-400" />
-          <input
-            placeholder="Поиск по ТТ, договору, адресу"
-            className="w-full bg-transparent text-sm outline-none placeholder:text-slate-400"
-          />
-        </div>
-      </Card>
-
-      <div className="space-y-3">
-        {stores.map((store) => {
-          const visit = visitData[store.id]
-          const completed = Object.values(visit.stepStatuses).filter((v) => v !== 'Не начат').length
-          return (
-            <Card key={store.id} className="p-4 transition hover:shadow-md">
-              <div
-                className="cursor-pointer"
-                onClick={() => {
-                  setSelectedStoreId(store.id)
-                  setPage('store')
-                }}
-              >
-                <div className="flex items-start justify-between gap-3">
-                  <div className="min-w-0">
-                    <div className="flex flex-wrap items-center gap-2">
-                      <div className="truncate text-[15px] font-semibold text-slate-900">
-                        {store.name}
-                      </div>
-                      {store.priority ? <Chip tone="blue">Приоритет</Chip> : null}
-                    </div>
-                    <div className="mt-1 text-xs text-slate-500">{store.address}</div>
-                    <div className="mt-1 text-xs text-slate-500">
-                      {store.contact} • {store.contractNo}
-                    </div>
-                  </div>
-                  <div className="shrink-0 text-right">
-                    <span
-                      className={cn(
-                        'inline-flex rounded-full border px-2.5 py-1 text-[11px] font-medium',
-                        statusTone(store.status)
-                      )}
-                    >
-                      {store.status}
-                    </span>
-                    <div className="mt-2 text-xs text-slate-500">{store.visitWindow}</div>
-                  </div>
-                </div>
-
-                <div className="mt-4 grid grid-cols-3 gap-2">
-                  <div className="rounded-2xl bg-slate-50 p-2.5">
-                    <div className="text-[10px] text-slate-500">Долг</div>
-                    <div
-                      className={cn(
-                        'mt-1 text-sm font-semibold',
-                        store.debt > 0 ? 'text-red-700' : 'text-slate-900'
-                      )}
-                    >
-                      {money(store.debt)}
-                    </div>
-                  </div>
-                  <div className="rounded-2xl bg-slate-50 p-2.5">
-                    <div className="text-[10px] text-slate-500">Последний заказ</div>
-                    <div className="mt-1 text-sm font-semibold text-slate-900">
-                      {store.lastOrderDate}
-                    </div>
-                  </div>
-                  <div className="rounded-2xl bg-slate-50 p-2.5">
-                    <div className="text-[10px] text-slate-500">Шаги визита</div>
-                    <div className="mt-1 text-sm font-semibold text-slate-900">{completed}/12</div>
-                  </div>
-                </div>
-              </div>
-
-              <div className="mt-3 flex flex-wrap gap-2">
-                {store.debt > 0 ? <Chip tone="danger">Есть долг</Chip> : null}
-                {store.noOrderRisk ? <Chip tone="warning">Нет заказа</Chip> : null}
-                {store.shelfRisk ? <Chip tone="warning">Риск по полке</Chip> : null}
-                {store.risk ? <Chip tone="danger">Требует внимания</Chip> : null}
-              </div>
-
-              <div className="mt-4 grid grid-cols-2 gap-3">
-                <button
-                  className="rounded-2xl border border-slate-200 bg-white px-3 py-3 text-sm font-semibold text-slate-700"
-                  onClick={() => {
-                    setSelectedStoreId(store.id)
-                    setPage('store')
-                  }}
-                >
-                  Карточка ТТ
-                </button>
-                <button
-                  className="rounded-2xl bg-slate-900 px-3 py-3 text-sm font-semibold text-white"
-                  onClick={() => startVisit(store.id)}
-                >
-                  {visit.started ? 'Продолжить визит' : 'Начать визит'}
-                </button>
-              </div>
-            </Card>
-          )
-        })}
-      </div> */}
+        {isLoading ? <StoreCardsSkeleton /> : <StoreCards stores={stores ?? []} />}
       </div>
     </>
   )
