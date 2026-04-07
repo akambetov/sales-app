@@ -1,83 +1,80 @@
-import { useState } from 'react'
+import { useNavigate } from 'react-router'
 
-import { Card } from '@components'
+import { Card, Chip } from '@components'
+import { useVisit } from '@contexts'
 import { cn, money, statusTone } from '@utils'
 
-import { Chip } from '../../../../components/chip'
-
-import { INITIAL_VISIT_STATE } from './constants'
-
-import type { IVisitState } from './@types'
-import type { IStore } from '../../@types'
+import type { IStore } from '@types'
 
 const StoreCards = ({ stores }: { stores: IStore[] }) => {
-  const [visitData] = useState<Record<number, IVisitState>>(() =>
-    Object.fromEntries(stores.map((s) => [s.id, INITIAL_VISIT_STATE]))
-  )
+  const navigate = useNavigate()
+  const { visitState, startVisit } = useVisit()
+
+  const handleSelectStore = (storeId: number) => () => {
+    navigate(`/store/${storeId}`)
+  }
 
   return (
     <div className="space-y-3">
       {stores.map((store) => {
-        const visit = visitData[store.id]
-        const completed = Object.values(visit.stepStatuses).filter((v) => v !== 'Не начат').length
+        const visit = visitState?.[store.id]
+        const completed = visit
+          ? Object.values(visit.stepStatuses).filter((v) => v !== 'Не начат').length
+          : 0
 
         return (
-          <Card key={store.id} className="p-4 transition hover:shadow-md">
-            <div
-              className="cursor-pointer"
-              onClick={() => {
-                // setSelectedStoreId(store.id)
-                // setPage('store')
-              }}
-            >
-              <div className="flex items-start justify-between gap-3">
-                <div className="min-w-0">
-                  <div className="flex flex-wrap items-center gap-2">
-                    <div className="truncate text-[15px] font-semibold text-slate-900">
-                      {store.name}
-                    </div>
-                    {store.priority ? <Chip tone="blue">Приоритет</Chip> : null}
+          <Card
+            key={store.id}
+            className="cursor-pointer p-4 transition hover:shadow-md"
+            onClick={handleSelectStore(store.id)}
+          >
+            <div className="flex items-start justify-between gap-3">
+              <div className="min-w-0">
+                <div className="flex flex-wrap items-center gap-2">
+                  <div className="truncate text-[15px] font-semibold text-slate-900">
+                    {store.name}
                   </div>
-                  <div className="mt-1 text-xs text-slate-500">{store.address}</div>
-                  <div className="mt-1 text-xs text-slate-500">
-                    {store.contact} • {store.contractNo}
-                  </div>
+                  {store.priority ? <Chip tone="blue">Приоритет</Chip> : null}
                 </div>
-                <div className="shrink-0 text-right">
-                  <span
-                    className={cn(
-                      'inline-flex rounded-full border px-2.5 py-1 text-[11px] font-medium',
-                      statusTone(store.status)
-                    )}
-                  >
-                    {store.status}
-                  </span>
-                  <div className="mt-2 text-xs text-slate-500">{store.visitWindow}</div>
+                <div className="mt-1 text-xs text-slate-500">{store.address}</div>
+                <div className="mt-1 text-xs text-slate-500">
+                  {store.contact} • {store.contractNo}
                 </div>
               </div>
+              <div className="shrink-0 text-right">
+                <span
+                  className={cn(
+                    'inline-flex rounded-full border px-2.5 py-1 text-[11px] font-medium',
+                    statusTone(store.status)
+                  )}
+                >
+                  {store.status}
+                </span>
+                <div className="mt-2 text-xs text-slate-500">{store.visitWindow}</div>
+              </div>
+            </div>
 
-              <div className="mt-4 grid grid-cols-3 gap-2">
-                <div className="rounded-2xl bg-slate-50 p-2.5">
-                  <div className="text-[10px] text-slate-500">Долг</div>
-                  <div
-                    className={cn(
-                      'mt-1 text-sm font-semibold',
-                      store.debt > 0 ? 'text-red-700' : 'text-slate-900'
-                    )}
-                  >
-                    {money(store.debt)}
-                  </div>
+            <div className="mt-4 grid grid-cols-3 gap-2">
+              <div className="rounded-2xl bg-slate-50 p-2.5">
+                <div className="text-[10px] text-slate-500">Долг</div>
+                <div
+                  className={cn(
+                    'mt-1 text-sm font-semibold',
+                    store.debt > 0 ? 'text-red-700' : 'text-slate-900'
+                  )}
+                >
+                  {money(store.debt)}
                 </div>
-                <div className="rounded-2xl bg-slate-50 p-2.5">
-                  <div className="text-[10px] text-slate-500">Последний заказ</div>
-                  <div className="mt-1 text-sm font-semibold text-slate-900">
-                    {store.lastOrderDate}
-                  </div>
+              </div>
+              <div className="rounded-2xl bg-slate-50 p-2.5">
+                <div className="text-[10px] text-slate-500">Последний заказ</div>
+                <div className="mt-1 text-sm font-semibold text-slate-900">
+                  {store.lastOrderDate}
                 </div>
-                <div className="rounded-2xl bg-slate-50 p-2.5">
-                  <div className="text-[10px] text-slate-500">Шаги визита</div>
-                  <div className="mt-1 text-sm font-semibold text-slate-900">{completed}/12</div>
-                </div>
+              </div>
+              <div className="rounded-2xl bg-slate-50 p-2.5">
+                <div className="text-[10px] text-slate-500">Шаги визита</div>
+                <div className="mt-1 text-sm font-semibold text-slate-900">{completed}/12</div>
               </div>
             </div>
 
@@ -90,19 +87,19 @@ const StoreCards = ({ stores }: { stores: IStore[] }) => {
 
             <div className="mt-4 grid grid-cols-2 gap-3">
               <button
-                className="rounded-2xl border border-slate-200 bg-white px-3 py-3 text-sm font-semibold text-slate-700"
-                onClick={() => {
-                  // setSelectedStoreId(store.id)
-                  // setPage('store')
-                }}
+                className="cursor-pointer rounded-2xl border border-slate-200 bg-white px-3 py-3 text-sm font-semibold text-slate-700"
+                onClick={handleSelectStore(store.id)}
               >
                 Карточка ТТ
               </button>
               <button
-                className="rounded-2xl bg-slate-900 px-3 py-3 text-sm font-semibold text-white"
-                // onClick={() => startVisit(store.id)}
+                className="cursor-pointer rounded-2xl bg-slate-900 px-3 py-3 text-sm font-semibold text-white"
+                onClick={(e) => {
+                  e.stopPropagation()
+                  startVisit(store.id)
+                }}
               >
-                {visit.started ? 'Продолжить визит' : 'Начать визит'}
+                {visit?.started ? 'Продолжить визит' : 'Начать визит'}
               </button>
             </div>
           </Card>

@@ -1,4 +1,4 @@
-import type { IStore } from './@types'
+import type { IStore } from '@types'
 
 export const storesSeed: IStore[] = [
   {

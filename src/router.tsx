@@ -1,6 +1,6 @@
 import { createBrowserRouter } from 'react-router'
 
-import { rootPage, salesPersonRoutePage } from '@pages'
+import { rootPage, salesPersonRoutePage, storeDetailsPage } from '@pages'
 
 export const router = createBrowserRouter([
   {
@@ -11,6 +11,10 @@ export const router = createBrowserRouter([
       {
         index: true,
         element: <salesPersonRoutePage.Component />
+      },
+      {
+        path: '/store/:storeId',
+        element: <storeDetailsPage.Component />
       }
     ]
   }

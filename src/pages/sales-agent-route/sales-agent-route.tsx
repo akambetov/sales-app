@@ -2,7 +2,7 @@ import { Bell } from 'lucide-react'
 import { useMemo } from 'react'
 
 import { Header, Avatar, Card } from '@components'
-import { useUser } from '@contexts'
+import { useUser, useVisit } from '@contexts'
 import { cn } from '@utils'
 
 import { Metrics, RouteStatsFilter, StoreCards, StoreCardsSkeleton } from './components'
@@ -23,9 +23,8 @@ const DEFAULT_ROUTE_STATS: IRouteStats = {
 
 const SalesAgentRoute = () => {
   const user = useUser()
-  const { data: stores, isLoading } = useStoresQuery()
-  // const visitData = useVisitData(stores.map((s) => s.id))
-  // const routeStats = getRouteStats(stores)
+  const { initVisit } = useVisit()
+  const { data: stores, isLoading } = useStoresQuery({ onSuccess: initVisit })
 
   const routeStats = useMemo(() => {
     if (stores) {

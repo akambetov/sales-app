@@ -1,25 +1,27 @@
+import { ArrowLeft } from 'lucide-react'
+
 export const Header = ({
   title,
   left,
-  right
+  right,
+  onBack
 }: {
   title: string
   left?: React.ReactNode
   right?: React.ReactNode
+  onBack?: () => void
 }) => (
   <div className="sticky top-0 z-20 border-b border-slate-200 bg-white/95 px-4 py-3 backdrop-blur">
     <div className="flex items-center justify-between gap-3">
       <div className="flex min-w-0 items-center gap-3">
-        {/* {onBack ? (
+        {onBack ? (
           <button
-            onClick={onBack}
             className="rounded-2xl border border-slate-200 p-2 text-slate-700 hover:bg-slate-50"
+            onClick={onBack}
           >
             <ArrowLeft size={18} />
           </button>
-        ) : (
-          <Avatar name="Бекзултан" lastName="Кабышев" />
-        )} */}
+        ) : null}
         {left}
         <div className="min-w-0">
           <div className="truncate text-[17px] font-semibold text-slate-900">{title}</div>

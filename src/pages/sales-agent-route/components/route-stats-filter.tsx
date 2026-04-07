@@ -27,7 +27,7 @@ export const RouteStatsFilter = ({
         <button
           key={item.label}
           className={cn(
-            'shrink-0 rounded-full border px-3 py-2 text-xs font-medium',
+            'cursor-pointer shrink-0 rounded-full border px-3 py-2 text-xs font-medium',
             item.active
               ? 'border-slate-900 bg-slate-900 text-white'
               : 'border-slate-200 bg-white text-slate-700'

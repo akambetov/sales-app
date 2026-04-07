@@ -14,7 +14,9 @@ export default defineConfig({
       '@constants': path.resolve(__dirname, 'src/constants/index.ts'),
       '@components': path.resolve(__dirname, 'src/components/index.ts'),
       '@contexts': path.resolve(__dirname, 'src/contexts/index.ts'),
-      '@pages': path.resolve(__dirname, 'src/pages/index.ts')
+      '@pages': path.resolve(__dirname, 'src/pages/index.ts'),
+      '@seeds': path.resolve(__dirname, 'src/seeds/index.ts'),
+      '@store': path.resolve(__dirname, 'src/store/index.ts')
     }
   }
 })

@@ -29,6 +29,8 @@
       "@components": ["./src/components/index.ts"],
       "@contexts": ["./src/contexts/index.ts"],
       "@pages": ["./src/pages/index.ts"],
+      "@seeds": ["./src/seeds/index.ts"],
+      "@store": ["./src/store/index.ts"],
     }
   },
   "include": ["src"],
