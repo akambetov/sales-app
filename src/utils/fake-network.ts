@@ -4,13 +4,13 @@ interface FakeNetworkData {
 
 export const fakeNetwork = <Data extends FakeNetworkData>({
   delay = 500,
-  data = { data: {} } as Data
+  response = { data: {} } as Data
 }: {
   delay?: number
-  data?: Data
+  response?: Data
 }) =>
   new Promise<Data>((resolve) => {
     setTimeout(() => {
-      resolve(data)
+      resolve(response)
     }, delay)
   })

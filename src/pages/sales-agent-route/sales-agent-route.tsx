@@ -1,12 +1,30 @@
 import { Bell } from 'lucide-react'
+import { useMemo } from 'react'
 
-import { Header } from '../../components'
-import { Avatar } from '../../components/avatar'
-import { Card } from '../../components/card'
-import { useUser } from '../../contexts/user-context'
+import { Header, Avatar, Card } from '@components'
+import { useUser } from '@contexts'
+
+import { Metrics } from './components'
+import { useStoresQuery } from './query'
 
 const SalesAgentRoute = () => {
   const user = useUser()
+  const { data: stores, isLoading } = useStoresQuery()
+  // const visitData = useVisitData(stores.map((s) => s.id))
+  // const routeStats = getRouteStats(stores)
+
+  const routeStats = useMemo(() => {
+    if (stores) {
+      const total = stores.length
+      const done = stores.filter((s) => s.status === 'Завершен').length
+      const inProgress = stores.filter((s) => s.status === 'В процессе').length
+      const left = total - done - inProgress
+
+      return { total, done, inProgress, left }
+    }
+
+    return { total: 0, done: 0, inProgress: 0, left: 0 }
+  }, [stores])
 
   return (
     <>
@@ -45,14 +63,9 @@ const SalesAgentRoute = () => {
             </div>
           </div>
         </Card>
+        <Metrics isLoading={isLoading} metrics={routeStats} />
 
-        {/* <div className="grid grid-cols-2 gap-3">
-        <MetricCard label="Всего визитов" value={`${routeStats.total}`} />
-        <MetricCard label="Завершено" value={`${routeStats.done}`} tone="green" />
-        <MetricCard label="В процессе" value={`${routeStats.inProgress}`} tone="blue" />
-        <MetricCard label="Осталось" value={`${routeStats.left}`} tone="amber" />
-      </div>
-
+        {/* 
       <div className="flex gap-2 overflow-x-auto pb-1 [-ms-overflow-style:none] [scrollbar-width:none] [&::-webkit-scrollbar]:hidden">
         {[
           { label: 'Все', count: routeStats.total, active: true },

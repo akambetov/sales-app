@@ -15,7 +15,7 @@ export const useRootQuery = () =>
   useQuery({
     queryKey: ['root'],
     queryFn: async () => {
-      const { data } = await fakeNetwork({ data: mockData })
+      const { data } = await fakeNetwork({ response: mockData })
 
       return data.user
     }
