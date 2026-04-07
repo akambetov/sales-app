@@ -5,7 +5,21 @@ import { Header, Avatar, Card } from '@components'
 import { useUser } from '@contexts'
 
 import { Metrics } from './components'
+import { RouteStatsFilter } from './components/route-stats-filter'
 import { useStoresQuery } from './query'
+
+import type { IRouteStats } from './@types'
+
+const DEFAULT_ROUTE_STATS: IRouteStats = {
+  total: 0,
+  notStarted: 0,
+  inProgress: 0,
+  done: 0,
+  overdue: 0,
+  withDebt: 0,
+  priority: 0,
+  left: 0
+}
 
 const SalesAgentRoute = () => {
   const user = useUser()
@@ -16,14 +30,19 @@ const SalesAgentRoute = () => {
   const routeStats = useMemo(() => {
     if (stores) {
       const total = stores.length
-      const done = stores.filter((s) => s.status === 'Завершен').length
+      const notStarted = stores.filter((s) => s.status === 'Не начат').length
       const inProgress = stores.filter((s) => s.status === 'В процессе').length
+      const done = stores.filter((s) => s.status === 'Завершен').length
+      const overdue = stores.filter((s) => s.status === 'Просрочен').length
+      const withDebt = stores.filter((s) => s.debt > 0).length
+      const priority = stores.filter((s) => s.priority).length
+
       const left = total - done - inProgress
 
-      return { total, done, inProgress, left }
+      return { total, notStarted, inProgress, done, overdue, withDebt, priority, left }
     }
 
-    return { total: 0, done: 0, inProgress: 0, left: 0 }
+    return DEFAULT_ROUTE_STATS
   }, [stores])
 
   return (
@@ -63,40 +82,10 @@ const SalesAgentRoute = () => {
             </div>
           </div>
         </Card>
-        <Metrics isLoading={isLoading} metrics={routeStats} />
+        <Metrics metrics={routeStats} isLoading={isLoading} />
+        <RouteStatsFilter routeStats={routeStats} isLoading={isLoading} />
 
         {/* 
-      <div className="flex gap-2 overflow-x-auto pb-1 [-ms-overflow-style:none] [scrollbar-width:none] [&::-webkit-scrollbar]:hidden">
-        {[
-          { label: 'Все', count: routeStats.total, active: true },
-          { label: 'Не начаты', count: stores.filter((s) => s.status === 'Не начат').length },
-          { label: 'В процессе', count: stores.filter((s) => s.status === 'В процессе').length },
-          { label: 'Завершены', count: stores.filter((s) => s.status === 'Завершен').length },
-          { label: 'Просрочены', count: stores.filter((s) => s.status === 'Просрочен').length },
-          { label: 'С долгом', count: stores.filter((s) => s.debt > 0).length },
-          { label: 'Приоритет', count: stores.filter((s) => s.priority).length }
-        ].map((item) => (
-          <button
-            key={item.label}
-            className={cn(
-              'shrink-0 rounded-full border px-3 py-2 text-xs font-medium',
-              item.active
-                ? 'border-slate-900 bg-slate-900 text-white'
-                : 'border-slate-200 bg-white text-slate-700'
-            )}
-          >
-            {item.label}{' '}
-            <span
-              className={cn(
-                'ml-1 rounded-full px-1.5 py-0.5 text-[10px]',
-                item.active ? 'bg-white/15 text-white' : 'bg-slate-100 text-slate-600'
-              )}
-            >
-              {item.count}
-            </span>
-          </button>
-        ))}
-      </div>
 
       <Card className="p-3">
         <div className="flex items-center gap-2 rounded-2xl bg-slate-50 px-3 py-2.5">

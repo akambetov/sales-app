@@ -1,6 +1,6 @@
 import type { TVisitStatus } from '@types'
 
-export interface IStore {
+interface IStore {
   id: number
   name: string
   address: string
@@ -21,3 +21,16 @@ export interface IStore {
   shelfRisk?: boolean
   status: TVisitStatus
 }
+
+interface IRouteStats {
+  total: number
+  notStarted: number
+  inProgress: number
+  done: number
+  overdue: number
+  withDebt: number
+  priority: number
+  left: number
+}
+
+export type { IStore, IRouteStats }

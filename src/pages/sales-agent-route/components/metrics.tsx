@@ -1,24 +1,25 @@
-import { MetricCard, SkeletonMetricCard } from './metric-card'
+import { MetricCard } from './metric-card'
+import { MetricCardSkeleton } from './skeleton'
 
 export const Metrics = ({
   metrics,
   isLoading
 }: {
-  isLoading: boolean
   metrics: {
     total: number
     done: number
     inProgress: number
     left: number
   }
+  isLoading: boolean
 }) => (
   <div className="grid grid-cols-2 gap-3">
     {isLoading ? (
       <>
-        <SkeletonMetricCard />
-        <SkeletonMetricCard />
-        <SkeletonMetricCard />
-        <SkeletonMetricCard />
+        <MetricCardSkeleton />
+        <MetricCardSkeleton />
+        <MetricCardSkeleton />
+        <MetricCardSkeleton />
       </>
     ) : (
       <>
