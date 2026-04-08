@@ -1,4 +1,4 @@
-import { Card, Header, SectionTitle, Spinner } from '@components'
+import { Card, Header, SectionTitle } from '@components'
 import { useInvoicesQuery, useProductsQuery, useStoresQuery } from '@queries'
 import { useVisitContext } from '@store'
 import { money } from '@utils'
@@ -7,13 +7,12 @@ import { MetricCard } from '../sales-agent-route/components/metric-card'
 
 const ResultsPage = () => {
   const { visitState, initVisit } = useVisitContext()
-  const { data: products, isLoading: isProductsLoading } = useProductsQuery()
-  const { data: invoices, isLoading: isInvoicesLoading } = useInvoicesQuery()
-  const { data: stores, isLoading: isStoresLoading } = useStoresQuery({ onSuccess: initVisit })
+  const { data: products } = useProductsQuery()
+  const { data: invoices } = useInvoicesQuery()
+  const { data: stores } = useStoresQuery({ onSuccess: initVisit })
 
-  const isLoading = isInvoicesLoading || isStoresLoading || isProductsLoading
-  if (isLoading || !invoices || !stores || !products || !visitState) {
-    return <Spinner fullscreen />
+  if (!invoices || !stores || !products || !visitState) {
+    return null
   }
 
   const doneVisits = Object.values(visitState).filter((visit) => visit.status === 'Завершен')

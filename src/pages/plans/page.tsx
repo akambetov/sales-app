@@ -1,12 +1,12 @@
-import { Card, Header, Spinner } from '@components'
+import { Card, Header } from '@components'
 import { usePlansQuery } from '@queries'
 import { cn, money, percent } from '@utils'
 
 const PlansPage = () => {
-  const { data: plans, isLoading } = usePlansQuery()
+  const { data: plans } = usePlansQuery()
 
-  if (isLoading || !plans) {
-    return <Spinner fullscreen />
+  if (!plans) {
+    return null
   }
 
   return (

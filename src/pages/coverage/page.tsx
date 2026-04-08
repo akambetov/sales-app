@@ -1,12 +1,12 @@
-import { Card, Header, Spinner } from '@components'
+import { Card, Header } from '@components'
 import { useStoresQuery } from '@queries'
 import { cn, money } from '@utils'
 
 export const CoveragePage = () => {
-  const { data: stores, isLoading } = useStoresQuery()
+  const { data: stores } = useStoresQuery()
 
-  if (isLoading || !stores) {
-    return <Spinner fullscreen />
+  if (!stores) {
+    return null
   }
 
   return (

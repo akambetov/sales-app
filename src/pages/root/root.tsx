@@ -3,7 +3,6 @@ import { useBlocker } from 'react-router'
 import { Layout } from '@components'
 import { programmaticNavigation } from '@utils'
 
-import { Spinner } from '../../components/spinner'
 import { UserProvider } from '../../contexts/user-context'
 
 import { useRootQuery } from './query'
@@ -13,12 +12,13 @@ const Root = () => {
     ({ historyAction }) =>
       historyAction === 'POP' && programmaticNavigation.shouldBlockPopNavigation()
   )
-  const { data, isFetching } = useRootQuery()
-  const isLoading = isFetching && !data
+  const { data } = useRootQuery()
 
-  return isLoading ? (
-    <Spinner fullscreen />
-  ) : (
+  if (!data) {
+    return null
+  }
+
+  return (
     <UserProvider value={data}>
       <Layout />
     </UserProvider>

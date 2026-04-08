@@ -1,6 +1,6 @@
 import { useNavigate } from 'react-router'
 
-import { ButtonSave, Header, Spinner } from '@components'
+import { ButtonSave, Header } from '@components'
 import { useStoreByIdQuery, useProductsQuery } from '@queries'
 import { useVisitContext } from '@store'
 import { cn, statusTone } from '@utils'
@@ -16,7 +16,7 @@ import { useStoreOrderHistoryQuery } from './query'
 
 const StoreDetailsPage = () => {
   const navigate = useNavigate()
-  const { data: store, isLoading } = useStoreByIdQuery()
+  const { data: store } = useStoreByIdQuery()
   const { data: storeHistory = [], isLoading: isHistoryLoading } = useStoreOrderHistoryQuery()
   const { data: products = [], isLoading: isProductsLoading } = useProductsQuery()
   const { visitState, startVisit } = useVisitContext()
@@ -25,9 +25,11 @@ const StoreDetailsPage = () => {
     navigate('/')
   }
 
-  return isLoading || !store ? (
-    <Spinner fullscreen />
-  ) : (
+  if (!store) {
+    return null
+  }
+
+  return (
     <div className="pb-32">
       <Header
         title={store.name}

@@ -1,6 +1,6 @@
 import { AlertTriangle, ChevronRight } from 'lucide-react'
 
-import { Card, Chip, Header, Spinner } from '@components'
+import { Card, Chip, Header } from '@components'
 import { useAppNavigate } from '@hooks'
 import { useStoreByIdQuery, useProductsQuery } from '@queries'
 import { useVisitContext } from '@store'
@@ -11,17 +11,15 @@ import { VISIT_STEP_DEFINITIONS } from './constants'
 const VisitSteps = () => {
   const { visitState, initVisit } = useVisitContext()
   const { goBack } = useAppNavigate()
-  const { data: store, isLoading: isStoreLoading } = useStoreByIdQuery((storeById) => {
+  const { data: store } = useStoreByIdQuery((storeById) => {
     if (storeById) {
       initVisit([storeById])
     }
   })
-  const { data: products, isLoading: isProductsLoading } = useProductsQuery()
+  const { data: products } = useProductsQuery()
 
-  const isLoading = isStoreLoading || isProductsLoading
-
-  if (isLoading || !store || !products || !visitState) {
-    return <Spinner fullscreen />
+  if (!store || !products || !visitState) {
+    return null
   }
 
   const currentVisit = visitState[store.id]

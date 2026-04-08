@@ -1,6 +1,6 @@
 import { useState } from 'react'
 
-import { Card, Chip, Header, SearchInput, Spinner } from '@components'
+import { Card, Chip, Header, SearchInput } from '@components'
 import { useProductsQuery } from '@queries'
 import { money } from '@utils'
 
@@ -19,10 +19,10 @@ const getMatchedSearch = ({ products, search }: { products: IProduct[]; search: 
 
 export const ProductsPage = () => {
   const [search, setSearch] = useState('')
-  const { data: products, isLoading } = useProductsQuery()
+  const { data: products } = useProductsQuery()
 
-  if (isLoading || !products) {
-    return <Spinner fullscreen />
+  if (!products) {
+    return null
   }
 
   const handleSearch = (value: string) => {

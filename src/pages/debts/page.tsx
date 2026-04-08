@@ -1,19 +1,17 @@
 import { ChevronRight } from 'lucide-react'
 
-import { Card, Header, Spinner } from '@components'
+import { Card, Header } from '@components'
 import { useInvoicesQuery, useStoresQuery } from '@queries'
 import { money } from '@utils'
 
 import { MetricCard } from '../sales-agent-route/components/metric-card'
 
 const DebtsPage = () => {
-  const { data: stores, isLoading } = useStoresQuery()
-  const { data: invoices, isLoading: isInvoicesLoading } = useInvoicesQuery()
+  const { data: stores } = useStoresQuery()
+  const { data: invoices } = useInvoicesQuery()
 
-  const isDataLoading = isLoading || isInvoicesLoading
-
-  if (isDataLoading || !stores || !invoices) {
-    return <Spinner fullscreen />
+  if (!stores || !invoices) {
+    return null
   }
 
   const debtStores = stores.filter((s) => s.debt > 0)
