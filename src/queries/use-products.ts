@@ -1,26 +1,24 @@
 import { useQuery } from '@tanstack/react-query'
 import { useParams } from 'react-router'
 
-import { orderHistorySeed } from '@seeds'
+import { productsSeed } from '@seeds'
 import { fakeNetwork } from '@utils'
 
-export const useStoreOrderHistoryQuery = () => {
+export const useStoreProductsQuery = () => {
   const { storeId } = useParams()
 
   return useQuery({
-    queryKey: ['stores', storeId, 'orderHistory'],
+    queryKey: ['stores', storeId, 'products'],
     queryFn: async () => {
       const { data } = await fakeNetwork({
         response: {
           data: {
-            orderHistory: orderHistorySeed.filter(
-              (store) => storeId && store.storeId === Number(storeId)
-            )
+            products: productsSeed
           }
         }
       })
 
-      return data.orderHistory
+      return data.products
     }
   })
 }

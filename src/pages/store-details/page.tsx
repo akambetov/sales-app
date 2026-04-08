@@ -1,7 +1,7 @@
 import { useNavigate } from 'react-router'
 
 import { ButtonSave, Header, Spinner } from '@components'
-import { useStoreByIdQuery } from '@queries'
+import { useStoreByIdQuery, useStoreProductsQuery } from '@queries'
 import { useVisitContext } from '@store'
 import { cn, statusTone } from '@utils'
 
@@ -12,7 +12,7 @@ import {
   StoreFastActions,
   StoreProductsList
 } from './components'
-import { useStoreOrderHistoryQuery, useStoreProductsQuery } from './query'
+import { useStoreOrderHistoryQuery } from './query'
 
 const StoreDetailsPage = () => {
   const navigate = useNavigate()

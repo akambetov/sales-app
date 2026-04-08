@@ -5,6 +5,7 @@ import { PATHS } from '@constants'
 import {
   coveragePage,
   debtsPage,
+  productsPage,
   rootPage,
   salesPersonRoutePage,
   storeDetailsPage,
@@ -39,7 +40,7 @@ export const router = createBrowserRouter([
       },
       {
         path: PATHS.products,
-        element: <Header title="products" />
+        element: <productsPage.Component />
       },
       {
         path: PATHS.plans,

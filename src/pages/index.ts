@@ -9,3 +9,5 @@ export { visitStepsPage } from './visit-steps'
 export { debtsPage } from './debts'
 
 export { coveragePage } from './coverage'
+
+export { productsPage } from './products'

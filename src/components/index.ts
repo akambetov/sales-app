@@ -13,3 +13,5 @@ export { SectionTitle } from './section-title'
 export { Chip } from './chip'
 
 export { ButtonSave } from './button-save'
+
+export { SearchInput } from './search-input'

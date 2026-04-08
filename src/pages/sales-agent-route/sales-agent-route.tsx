@@ -1,7 +1,7 @@
-import { Bell, Search, X } from 'lucide-react'
-import { useMemo, useState, type ChangeEvent } from 'react'
+import { Bell } from 'lucide-react'
+import { useMemo, useState } from 'react'
 
-import { Header, Avatar, Card } from '@components'
+import { Header, Avatar, Card, SearchInput } from '@components'
 import { useUser } from '@contexts'
 import { useStoresQuery } from '@queries'
 import { useVisitContext } from '@store'
@@ -89,13 +89,7 @@ const SalesAgentRoute = () => {
     return { total, notStarted, inProgress, done, overdue, withDebt, priority }
   }, [groupedStatusStores, search])
 
-  const handleSearch = (event: ChangeEvent<HTMLInputElement>) => {
-    const { value } = event.target
-
-    if (value.length && value.at(0) === ' ') {
-      return
-    }
-
+  const handleSearch = (value: string) => {
     setSearch(value)
   }
 
@@ -151,19 +145,7 @@ const SalesAgentRoute = () => {
           </div>
         </Card>
         <Metrics metrics={metrics} isLoading={isLoading} />
-        <Card className="p-3">
-          <div className="flex items-center gap-2 rounded-2xl bg-slate-50 px-3 py-2.5">
-            <Search size={16} className="text-slate-400" />
-            <input
-              value={search}
-              onChange={handleSearch}
-              placeholder="Поиск по названию ТТ, договору, адресу"
-              aria-label="Поиск по торговой точке"
-              className="w-full bg-transparent text-sm outline-none placeholder:text-slate-400"
-            />
-            <X size={16} className="text-slate-400 cursor-pointer" onClick={handleClearSearch} />
-          </div>
-        </Card>
+        <SearchInput search={search} handleSearch={handleSearch} handleClear={handleClearSearch} />
         <RouteStatsFilter
           routeStats={routeStats}
           isLoading={isLoading}
