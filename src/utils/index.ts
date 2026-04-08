@@ -7,3 +7,5 @@ export { statusTone } from './status-tone'
 export { money } from './format'
 
 export { programmaticNavigation } from './router-blocker'
+
+export { percent } from './percent'

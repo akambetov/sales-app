@@ -5,3 +5,5 @@ export { useStoreByIdQuery } from './use-store-by-id'
 export { useInvoicesQuery } from './use-invoices'
 
 export { useStoreProductsQuery } from './use-products'
+
+export { usePlansQuery } from './use-plans'
