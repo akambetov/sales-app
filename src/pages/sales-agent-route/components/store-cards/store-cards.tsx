@@ -14,6 +14,10 @@ const StoreCards = ({ stores }: { stores: IStore[] }) => {
     navigate(`/store/${storeId}`)
   }
 
+  const handleVisit = (storeId: number) => {
+    navigate(`/store/${storeId}/visit-steps`)
+  }
+
   return (
     <div className="space-y-3">
       {stores.map((store) => {
@@ -97,6 +101,7 @@ const StoreCards = ({ stores }: { stores: IStore[] }) => {
                 onClick={(e) => {
                   e.stopPropagation()
                   startVisit(store.id)
+                  handleVisit(store.id)
                 }}
               >
                 {visit?.started ? 'Продолжить визит' : 'Начать визит'}
