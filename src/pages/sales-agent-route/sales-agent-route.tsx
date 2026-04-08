@@ -1,5 +1,5 @@
 import { Bell } from 'lucide-react'
-import { useMemo } from 'react'
+import { useMemo, useState } from 'react'
 
 import { Header, Avatar, Card } from '@components'
 import { useUser } from '@contexts'
@@ -11,38 +11,55 @@ import { useStoresQuery } from './query'
 
 import type { IRouteStats } from './@types'
 
-const DEFAULT_ROUTE_STATS: IRouteStats = {
-  total: 0,
-  notStarted: 0,
-  inProgress: 0,
-  done: 0,
-  overdue: 0,
-  withDebt: 0,
-  priority: 0,
-  left: 0
-}
-
 const SalesAgentRoute = () => {
   const user = useUser()
   const { initVisit } = useVisitContext()
   const { data: stores, isLoading } = useStoresQuery({ onSuccess: initVisit })
+  const [filter, setFilter] = useState<keyof IRouteStats>('total')
+
+  const groupedStores = useMemo(() => {
+    const notStarted = stores?.filter((s) => s.status === 'Не начат') ?? []
+    const inProgress = stores?.filter((s) => s.status === 'В процессе') ?? []
+    const done = stores?.filter((s) => s.status === 'Завершен') ?? []
+    const overdue = stores?.filter((s) => s.status === 'Просрочен') ?? []
+    const withDebt = stores?.filter((s) => s.debt > 0) ?? []
+    const priority = stores?.filter((s) => s.priority) ?? []
+    const total = stores ?? []
+
+    return { notStarted, inProgress, done, overdue, withDebt, priority, total }
+  }, [stores])
+
+  const filteredStores = useMemo(() => {
+    switch (filter) {
+      case 'notStarted':
+        return groupedStores.notStarted
+      case 'inProgress':
+        return groupedStores.inProgress
+      case 'done':
+        return groupedStores.done
+      case 'overdue':
+        return groupedStores.overdue
+      case 'withDebt':
+        return groupedStores.withDebt
+      case 'priority':
+        return groupedStores.priority
+      default:
+        return groupedStores.total
+    }
+  }, [filter, groupedStores])
 
   const routeStats = useMemo(() => {
-    if (stores) {
-      const total = stores.length
-      const notStarted = stores.filter((s) => s.status === 'Не начат').length
-      const inProgress = stores.filter((s) => s.status === 'В процессе').length
-      const done = stores.filter((s) => s.status === 'Завершен').length
-      const overdue = stores.filter((s) => s.status === 'Просрочен').length
-      const withDebt = stores.filter((s) => s.debt > 0).length
-      const priority = stores.filter((s) => s.priority).length
-      const left = total - done - inProgress
+    const total = groupedStores.total.length
+    const notStarted = groupedStores.notStarted.length
+    const inProgress = groupedStores.inProgress.length
+    const done = groupedStores.done.length
+    const overdue = groupedStores.overdue.length
+    const withDebt = groupedStores.withDebt.length
+    const priority = groupedStores.priority.length
+    const left = total - done - inProgress
 
-      return { total, notStarted, inProgress, done, overdue, withDebt, priority, left }
-    }
-
-    return DEFAULT_ROUTE_STATS
-  }, [stores])
+    return { total, notStarted, inProgress, done, overdue, withDebt, priority, left }
+  }, [groupedStores])
 
   return (
     <>
@@ -101,8 +118,13 @@ const SalesAgentRoute = () => {
             />
           </div>
         </Card> */}
-        <RouteStatsFilter routeStats={routeStats} isLoading={isLoading} />
-        {isLoading ? <StoreCardsSkeleton /> : <StoreCards stores={stores ?? []} />}
+        <RouteStatsFilter
+          routeStats={routeStats}
+          isLoading={isLoading}
+          filter={filter}
+          onFilterChange={setFilter}
+        />
+        {isLoading ? <StoreCardsSkeleton /> : <StoreCards stores={filteredStores} />}
       </div>
     </>
   )
