@@ -7,3 +7,5 @@ export { storeDetailsPage } from './store-details'
 export { visitStepsPage } from './visit-steps'
 
 export { debtsPage } from './debts'
+
+export { coveragePage } from './coverage'
