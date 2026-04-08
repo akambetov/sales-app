@@ -22,7 +22,6 @@ const VisitSteps = () => {
     return null
   }
 
-  console.log(visitState)
   const currentVisit = visitState[store.id]
   const completedSteps = Object.values(currentVisit.stepStatuses).filter(
     (v) => v !== 'Не начат'
