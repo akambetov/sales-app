@@ -2,7 +2,7 @@ import { createBrowserRouter } from 'react-router'
 
 import { Header } from '@components'
 import { PATHS } from '@constants'
-import { rootPage, salesPersonRoutePage, storeDetailsPage, visitStepsPage } from '@pages'
+import { debtsPage, rootPage, salesPersonRoutePage, storeDetailsPage, visitStepsPage } from '@pages'
 
 export const router = createBrowserRouter([
   {
@@ -24,11 +24,7 @@ export const router = createBrowserRouter([
       },
       {
         path: PATHS.debts,
-        element: (
-          <div className="pb-28">
-            <Header title="debts" />
-          </div>
-        )
+        element: <debtsPage.Component />
       },
       {
         path: PATHS.coverage,

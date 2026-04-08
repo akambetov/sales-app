@@ -3,11 +3,11 @@ import { useMemo, useState, type ChangeEvent } from 'react'
 
 import { Header, Avatar, Card } from '@components'
 import { useUser } from '@contexts'
+import { useStoresQuery } from '@queries'
 import { useVisitContext } from '@store'
 import { cn } from '@utils'
 
 import { Metrics, RouteStatsFilter, StoreCards, StoreCardsSkeleton } from './components'
-import { useStoresQuery } from './query'
 
 import type { IRouteStats } from './@types'
 import type { IStore } from '@types'
