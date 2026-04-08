@@ -16,7 +16,7 @@ export const Header = ({
       <div className="flex min-w-0 items-center gap-3">
         {onBack ? (
           <button
-            className="rounded-2xl border border-slate-200 p-2 text-slate-700 hover:bg-slate-50"
+            className="rounded-2xl border border-slate-200 p-2 text-slate-700 hover:bg-slate-50 cursor-pointer"
             onClick={onBack}
           >
             <ArrowLeft size={18} />
