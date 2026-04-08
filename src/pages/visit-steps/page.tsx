@@ -1,9 +1,8 @@
 import { AlertTriangle, ChevronRight } from 'lucide-react'
 
-import { Card, Chip, Header } from '@components'
+import { Card, Chip, Header, Spinner } from '@components'
 import { useAppNavigate } from '@hooks'
-import { useStoreByIdQuery } from '@queries'
-import { productsSeed } from '@seeds'
+import { useStoreByIdQuery, useProductsQuery } from '@queries'
 import { useVisitContext } from '@store'
 import { cn, money, statusTone } from '@utils'
 
@@ -12,14 +11,17 @@ import { VISIT_STEP_DEFINITIONS } from './constants'
 const VisitSteps = () => {
   const { visitState, initVisit } = useVisitContext()
   const { goBack } = useAppNavigate()
-  const { data: store } = useStoreByIdQuery((storeById) => {
+  const { data: store, isLoading: isStoreLoading } = useStoreByIdQuery((storeById) => {
     if (storeById) {
       initVisit([storeById])
     }
   })
+  const { data: products, isLoading: isProductsLoading } = useProductsQuery()
 
-  if (!store || !visitState) {
-    return null
+  const isLoading = isStoreLoading || isProductsLoading
+
+  if (isLoading || !store || !products || !visitState) {
+    return <Spinner fullscreen />
   }
 
   const currentVisit = visitState[store.id]
@@ -30,7 +32,7 @@ const VisitSteps = () => {
   const currentOrderItems = Object.entries(currentVisit.cart)
     .filter(([, qty]) => qty > 0)
     .map(([productId, qty]) => ({
-      product: productsSeed.find((p) => p.id === Number(productId))!,
+      product: products.find((p) => p.id === Number(productId))!,
       qty
     }))
 

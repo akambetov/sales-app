@@ -1,7 +1,18 @@
 import type { useVisitStore } from './visit-store'
-import type { IEquipment, TStepStatus, TVisitStatus } from '@types'
+import type { TVisitStatus } from '@types'
 
-export interface IVisitState {
+interface IEquipment {
+  id: number
+  storeId: number
+  name: string
+  brand: string
+  serial: string
+  type: string
+  status: 'Исправно' | 'Требует обслуживания' | 'Повреждено' | 'Не найдено'
+}
+
+type TStepStatus = 'Не начат' | 'Выполнен' | 'Выполнен с отклонением'
+interface IVisitState {
   status: TVisitStatus
   started: boolean
   stepStatuses: Record<string, TStepStatus>
@@ -24,4 +35,6 @@ export interface IVisitState {
   equipmentStatuses: Record<number, IEquipment['status']>
 }
 
-export type TVisitStore = ReturnType<typeof useVisitStore>
+type TVisitStore = ReturnType<typeof useVisitStore>
+
+export type { TStepStatus, IVisitState, TVisitStore }

@@ -1,7 +1,7 @@
 import { useNavigate } from 'react-router'
 
 import { ButtonSave, Header, Spinner } from '@components'
-import { useStoreByIdQuery, useStoreProductsQuery } from '@queries'
+import { useStoreByIdQuery, useProductsQuery } from '@queries'
 import { useVisitContext } from '@store'
 import { cn, statusTone } from '@utils'
 
@@ -18,7 +18,7 @@ const StoreDetailsPage = () => {
   const navigate = useNavigate()
   const { data: store, isLoading } = useStoreByIdQuery()
   const { data: storeHistory = [], isLoading: isHistoryLoading } = useStoreOrderHistoryQuery()
-  const { data: products = [], isLoading: isProductsLoading } = useStoreProductsQuery()
+  const { data: products = [], isLoading: isProductsLoading } = useProductsQuery()
   const { visitState, startVisit } = useVisitContext()
 
   const handleBack = () => {

@@ -1,7 +1,7 @@
 import { Card, SectionTitle } from '@components'
 import { cn, money } from '@utils'
 
-import type { IOrderHistoryItem } from '@types'
+import type { IOrderHistoryItem } from '../@types'
 
 export const StoreHistoryOrderCard = ({
   orders,

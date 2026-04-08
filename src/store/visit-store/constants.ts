@@ -13,8 +13,7 @@ import {
   Target
 } from 'lucide-react'
 
-import type { IVisitState } from './@types'
-import type { TStepStatus } from '@types'
+import type { IVisitState, TStepStatus } from './@types'
 
 const VISIT_STEP_DEFINITIONS = [
   {

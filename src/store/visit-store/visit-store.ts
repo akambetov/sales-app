@@ -2,8 +2,8 @@ import { useReducer } from 'react'
 
 import { INITIAL_VISIT_STATE } from './constants'
 
-import type { IVisitState } from './@types'
-import type { IStore, TStepStatus } from '@types'
+import type { IVisitState, TStepStatus } from './@types'
+import type { IStore } from '@types'
 
 type TVisitAction =
   | { type: 'INIT_VISIT'; payload: { stores: IStore[] } }
