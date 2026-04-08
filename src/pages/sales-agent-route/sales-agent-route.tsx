@@ -12,10 +12,13 @@ import { useStoresQuery } from './query'
 import type { IRouteStats } from './@types'
 import type { IStore } from '@types'
 
-const getMatchedSearch = ({ stores, search }: { stores: IStore[]; search: string }) =>
-  stores.filter((store) =>
-    [store.name, store.address, store.contractNo].join(' ').toLowerCase().includes(search)
+const getMatchedSearch = ({ stores, search }: { stores: IStore[]; search: string }) => {
+  const query = search.trim().toLowerCase()
+
+  return stores.filter((store) =>
+    [store.name, store.address, store.contractNo].join(' ').toLowerCase().includes(query)
   )
+}
 
 const SalesAgentRoute = () => {
   const user = useUser()
@@ -87,7 +90,13 @@ const SalesAgentRoute = () => {
   }, [groupedStatusStores, search])
 
   const handleSearch = (event: ChangeEvent<HTMLInputElement>) => {
-    setSearch(event.target.value.trim().toLowerCase())
+    const { value } = event.target
+
+    if (value.length && value.at(0) === ' ') {
+      return
+    }
+
+    setSearch(value)
   }
 
   const handleClearSearch = () => {
