@@ -102,9 +102,7 @@ const VISIT_STEP_DEFINITIONS = [
   }
 ]
 
-const INITIAL_VISIT_STATE: IVisitState = {
-  status: 'Не начат',
-  started: false,
+const INITIAL_VISIT_STATE: Omit<IVisitState, 'status' | 'started'> = {
   stepStatuses: Object.fromEntries(VISIT_STEP_DEFINITIONS.map((s) => [s.id, 'Не начат'])) as Record<
     string,
     TStepStatus

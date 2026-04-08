@@ -31,7 +31,10 @@ const visitReducer = (state: Record<number, IVisitState> | null, action: TVisitA
             return [s.id, state[s.id]]
           }
 
-          return [s.id, INITIAL_VISIT_STATE]
+          return [
+            s.id,
+            { ...INITIAL_VISIT_STATE, status: s.status, started: s.status !== 'Не начат' }
+          ]
         })
       )
 

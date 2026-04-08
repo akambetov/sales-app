@@ -6,6 +6,7 @@ import {
   debtsPage,
   plansPage,
   productsPage,
+  resultsPage,
   rootPage,
   salesPersonRoutePage,
   storeDetailsPage,
@@ -48,7 +49,7 @@ export const router = createBrowserRouter([
       },
       {
         path: PATHS.results,
-        element: <plansPage.Component />
+        element: <resultsPage.Component />
       }
     ]
   }

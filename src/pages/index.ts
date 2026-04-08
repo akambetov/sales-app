@@ -13,3 +13,5 @@ export { coveragePage } from './coverage'
 export { productsPage } from './products'
 
 export { plansPage } from './plans'
+
+export { resultsPage } from './results'
