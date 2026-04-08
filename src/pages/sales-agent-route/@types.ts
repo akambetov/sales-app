@@ -6,5 +6,4 @@ export interface IRouteStats {
   overdue: number
   withDebt: number
   priority: number
-  left: number
 }

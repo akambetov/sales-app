@@ -1,5 +1,5 @@
-import { Bell } from 'lucide-react'
-import { useMemo, useState } from 'react'
+import { Bell, Search, X } from 'lucide-react'
+import { useMemo, useState, type ChangeEvent } from 'react'
 
 import { Header, Avatar, Card } from '@components'
 import { useUser } from '@contexts'
@@ -10,14 +10,21 @@ import { Metrics, RouteStatsFilter, StoreCards, StoreCardsSkeleton } from './com
 import { useStoresQuery } from './query'
 
 import type { IRouteStats } from './@types'
+import type { IStore } from '@types'
+
+const getMatchedSearch = ({ stores, search }: { stores: IStore[]; search: string }) =>
+  stores.filter((store) =>
+    [store.name, store.address, store.contractNo].join(' ').toLowerCase().includes(search)
+  )
 
 const SalesAgentRoute = () => {
   const user = useUser()
   const { initVisit } = useVisitContext()
   const { data: stores, isLoading } = useStoresQuery({ onSuccess: initVisit })
   const [filter, setFilter] = useState<keyof IRouteStats>('total')
+  const [search, setSearch] = useState('')
 
-  const groupedStores = useMemo(() => {
+  const groupedStatusStores = useMemo(() => {
     const notStarted = stores?.filter((s) => s.status === 'Не начат') ?? []
     const inProgress = stores?.filter((s) => s.status === 'В процессе') ?? []
     const done = stores?.filter((s) => s.status === 'Завершен') ?? []
@@ -29,37 +36,63 @@ const SalesAgentRoute = () => {
     return { notStarted, inProgress, done, overdue, withDebt, priority, total }
   }, [stores])
 
-  const filteredStores = useMemo(() => {
-    switch (filter) {
-      case 'notStarted':
-        return groupedStores.notStarted
-      case 'inProgress':
-        return groupedStores.inProgress
-      case 'done':
-        return groupedStores.done
-      case 'overdue':
-        return groupedStores.overdue
-      case 'withDebt':
-        return groupedStores.withDebt
-      case 'priority':
-        return groupedStores.priority
-      default:
-        return groupedStores.total
+  const metrics = {
+    total: groupedStatusStores.total.length,
+    done: groupedStatusStores.done.length,
+    inProgress: groupedStatusStores.inProgress.length,
+    get left() {
+      return this.total - this.done - this.inProgress
     }
-  }, [filter, groupedStores])
+  }
+
+  const filteredStores = useMemo(() => {
+    const getFilteredStores = () => {
+      switch (filter) {
+        case 'notStarted':
+          return groupedStatusStores.notStarted
+        case 'inProgress':
+          return groupedStatusStores.inProgress
+        case 'done':
+          return groupedStatusStores.done
+        case 'overdue':
+          return groupedStatusStores.overdue
+        case 'withDebt':
+          return groupedStatusStores.withDebt
+        case 'priority':
+          return groupedStatusStores.priority
+        default:
+          return groupedStatusStores.total
+      }
+    }
+
+    const filtered = getFilteredStores()
+
+    if (!search) {
+      return filtered
+    }
+
+    return getMatchedSearch({ stores: filtered, search })
+  }, [filter, groupedStatusStores, search])
 
   const routeStats = useMemo(() => {
-    const total = groupedStores.total.length
-    const notStarted = groupedStores.notStarted.length
-    const inProgress = groupedStores.inProgress.length
-    const done = groupedStores.done.length
-    const overdue = groupedStores.overdue.length
-    const withDebt = groupedStores.withDebt.length
-    const priority = groupedStores.priority.length
-    const left = total - done - inProgress
+    const total = getMatchedSearch({ stores: groupedStatusStores.total, search }).length
+    const notStarted = getMatchedSearch({ stores: groupedStatusStores.notStarted, search }).length
+    const inProgress = getMatchedSearch({ stores: groupedStatusStores.inProgress, search }).length
+    const done = getMatchedSearch({ stores: groupedStatusStores.done, search }).length
+    const overdue = getMatchedSearch({ stores: groupedStatusStores.overdue, search }).length
+    const withDebt = getMatchedSearch({ stores: groupedStatusStores.withDebt, search }).length
+    const priority = getMatchedSearch({ stores: groupedStatusStores.priority, search }).length
 
-    return { total, notStarted, inProgress, done, overdue, withDebt, priority, left }
-  }, [groupedStores])
+    return { total, notStarted, inProgress, done, overdue, withDebt, priority }
+  }, [groupedStatusStores, search])
+
+  const handleSearch = (event: ChangeEvent<HTMLInputElement>) => {
+    setSearch(event.target.value.trim().toLowerCase())
+  }
+
+  const handleClearSearch = () => {
+    setSearch('')
+  }
 
   return (
     <>
@@ -91,7 +124,7 @@ const SalesAgentRoute = () => {
                     isLoading ? 'animate-pulse rounded bg-slate-200 text-transparent mt-2' : ''
                   )}
                 >
-                  {routeStats.done}/{routeStats.total}
+                  {metrics.done}/{metrics.total}
                 </div>
               </div>
             </div>
@@ -102,22 +135,26 @@ const SalesAgentRoute = () => {
                   isLoading ? 'animate-pulse bg-slate-200' : 'bg-white'
                 )}
                 style={{
-                  width: `${(routeStats.done / routeStats.total) * 100}%`
+                  width: `${(metrics.done / metrics.total) * 100}%`
                 }}
               />
             </div>
           </div>
         </Card>
-        <Metrics metrics={routeStats} isLoading={isLoading} />
-        {/* <Card className="p-3">
+        <Metrics metrics={metrics} isLoading={isLoading} />
+        <Card className="p-3">
           <div className="flex items-center gap-2 rounded-2xl bg-slate-50 px-3 py-2.5">
             <Search size={16} className="text-slate-400" />
             <input
-              placeholder="Поиск по ТТ, договору, адресу"
+              value={search}
+              onChange={handleSearch}
+              placeholder="Поиск по названию ТТ, договору, адресу"
+              aria-label="Поиск по торговой точке"
               className="w-full bg-transparent text-sm outline-none placeholder:text-slate-400"
             />
+            <X size={16} className="text-slate-400 cursor-pointer" onClick={handleClearSearch} />
           </div>
-        </Card> */}
+        </Card>
         <RouteStatsFilter
           routeStats={routeStats}
           isLoading={isLoading}
