@@ -1,7 +1,7 @@
 import { useNavigate } from 'react-router'
 
 import { ButtonSave, Header, Spinner } from '@components'
-import { useVisit } from '@contexts'
+import { useVisitContext } from '@store'
 import { cn, statusTone } from '@utils'
 
 import {
@@ -18,7 +18,7 @@ const StoreDetailsPage = () => {
   const { data: store, isLoading } = useStoreByIdQuery()
   const { data: storeHistory = [], isLoading: isHistoryLoading } = useStoreOrderHistoryQuery()
   const { data: products = [], isLoading: isProductsLoading } = useStoreProductsQuery()
-  const { visitState, startVisit } = useVisit()
+  const { visitState, startVisit } = useVisitContext()
 
   const handleBack = () => {
     navigate('/')

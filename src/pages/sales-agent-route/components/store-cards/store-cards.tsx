@@ -1,14 +1,14 @@
 import { useNavigate } from 'react-router'
 
 import { Card, Chip } from '@components'
-import { useVisit } from '@contexts'
+import { useVisitContext } from '@store'
 import { cn, money, statusTone } from '@utils'
 
 import type { IStore } from '@types'
 
 const StoreCards = ({ stores }: { stores: IStore[] }) => {
   const navigate = useNavigate()
-  const { visitState, startVisit } = useVisit()
+  const { visitState, startVisit } = useVisitContext()
 
   const handleSelectStore = (storeId: number) => () => {
     navigate(`/store/${storeId}`)

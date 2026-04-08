@@ -6,11 +6,11 @@ const visitContext = createContext<TVisitStore | undefined>(undefined)
 
 export const VisitProvider = visitContext.Provider
 
-export const useVisit = () => {
+export const useVisitContext = () => {
   const context = useContext(visitContext)
 
   if (!context) {
-    throw new Error('useVisit must be used within a VisitProvider')
+    throw new Error('useVisitContext must be used within a VisitProvider')
   }
 
   return context
