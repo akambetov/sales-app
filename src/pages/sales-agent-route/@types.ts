@@ -7,3 +7,5 @@ export interface IRouteStats {
   withDebt: number
   priority: number
 }
+
+export type TRouteDayFilter = 'all' | 'monday' | 'tuesday' | 'wednesday' | 'thursday' | 'friday'

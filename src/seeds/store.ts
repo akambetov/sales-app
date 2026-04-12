@@ -16,6 +16,7 @@ export const storesSeed: IStore[] = [
     debt: 120000,
     overdueDebt: 80000,
     visitWindow: '10:00–10:30',
+    workDay: 'monday',
     priority: true,
     risk: true,
     shelfRisk: true,
@@ -36,6 +37,7 @@ export const storesSeed: IStore[] = [
     debt: 0,
     overdueDebt: 0,
     visitWindow: '11:00–11:20',
+    workDay: 'monday',
     noOrderRisk: true,
     status: 'Не начат'
   },
@@ -54,6 +56,7 @@ export const storesSeed: IStore[] = [
     debt: 45000,
     overdueDebt: 15000,
     visitWindow: '12:10–12:30',
+    workDay: 'tuesday',
     priority: true,
     status: 'Не начат'
   },
@@ -72,6 +75,7 @@ export const storesSeed: IStore[] = [
     debt: 17000,
     overdueDebt: 0,
     visitWindow: '13:00–13:10',
+    workDay: 'wednesday',
     status: 'Завершен'
   },
   {
@@ -89,6 +93,7 @@ export const storesSeed: IStore[] = [
     debt: 260000,
     overdueDebt: 130000,
     visitWindow: '14:10–14:40',
+    workDay: 'friday',
     risk: true,
     status: 'Не начат'
   }

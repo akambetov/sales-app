@@ -15,3 +15,5 @@ export { Chip } from './chip'
 export { ButtonSave } from './button-save'
 
 export { SearchInput } from './search-input'
+
+export { Select } from './select'

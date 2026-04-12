@@ -9,7 +9,7 @@ import { cn } from '@utils'
 
 import { Metrics, RouteStatsFilter, StoreCards, StoreCardsSkeleton } from './components'
 
-import type { IRouteStats } from './@types'
+import type { IRouteStats, TRouteDayFilter } from './@types'
 import type { IStore } from '@types'
 
 const getMatchedSearch = ({ stores, search }: { stores: IStore[]; search: string }) => {
@@ -24,20 +24,41 @@ const SalesAgentRoute = () => {
   const user = useUser()
   const { initVisit } = useVisitContext()
   const { data: stores, isLoading } = useStoresQuery({ onSuccess: initVisit })
+  const [dayFilter, setDayFilter] = useState<TRouteDayFilter>('all')
   const [filter, setFilter] = useState<keyof IRouteStats>('total')
   const [search, setSearch] = useState('')
 
+  const dayFilteredStores = useMemo(() => {
+    if (dayFilter === 'all') {
+      return stores ?? []
+    }
+
+    return stores?.filter((store) => store.workDay === dayFilter) ?? []
+  }, [dayFilter, stores])
+
   const groupedStatusStores = useMemo(() => {
-    const notStarted = stores?.filter((s) => s.status === 'Не начат') ?? []
-    const inProgress = stores?.filter((s) => s.status === 'В процессе') ?? []
-    const done = stores?.filter((s) => s.status === 'Завершен') ?? []
-    const overdue = stores?.filter((s) => s.status === 'Просрочен') ?? []
-    const withDebt = stores?.filter((s) => s.debt > 0) ?? []
-    const priority = stores?.filter((s) => s.priority) ?? []
-    const total = stores ?? []
+    const notStarted = dayFilteredStores.filter((s) => s.status === 'Не начат')
+    const inProgress = dayFilteredStores.filter((s) => s.status === 'В процессе')
+    const done = dayFilteredStores.filter((s) => s.status === 'Завершен')
+    const overdue = dayFilteredStores.filter((s) => s.status === 'Просрочен')
+    const withDebt = dayFilteredStores.filter((s) => s.debt > 0)
+    const priority = dayFilteredStores.filter((s) => s.priority)
+    const total = dayFilteredStores
 
     return { notStarted, inProgress, done, overdue, withDebt, priority, total }
-  }, [stores])
+  }, [dayFilteredStores])
+
+  const dayStats = useMemo(
+    () => ({
+      all: stores?.length ?? 0,
+      monday: stores?.filter((s) => s.workDay === 'monday').length ?? 0,
+      tuesday: stores?.filter((s) => s.workDay === 'tuesday').length ?? 0,
+      wednesday: stores?.filter((s) => s.workDay === 'wednesday').length ?? 0,
+      thursday: stores?.filter((s) => s.workDay === 'thursday').length ?? 0,
+      friday: stores?.filter((s) => s.workDay === 'friday').length ?? 0
+    }),
+    [stores]
+  )
 
   const metrics = {
     total: groupedStatusStores.total.length,
@@ -47,6 +68,8 @@ const SalesAgentRoute = () => {
       return this.total - this.done - this.inProgress
     }
   }
+
+  const progress = metrics.total ? (metrics.done / metrics.total) * 100 : 0
 
   const filteredStores = useMemo(() => {
     const getFilteredStores = () => {
@@ -97,6 +120,11 @@ const SalesAgentRoute = () => {
     setSearch('')
   }
 
+  const handleDayFilterChange = (value: TRouteDayFilter) => {
+    setDayFilter(value)
+    setFilter('total')
+  }
+
   return (
     <>
       <Header
@@ -138,7 +166,7 @@ const SalesAgentRoute = () => {
                   isLoading ? 'animate-pulse bg-slate-200' : 'bg-white'
                 )}
                 style={{
-                  width: `${(metrics.done / metrics.total) * 100}%`
+                  width: `${progress}%`
                 }}
               />
             </div>
@@ -147,9 +175,12 @@ const SalesAgentRoute = () => {
         <Metrics metrics={metrics} isLoading={isLoading} />
         <SearchInput search={search} handleSearch={handleSearch} handleClear={handleClearSearch} />
         <RouteStatsFilter
+          dayFilter={dayFilter}
+          dayStats={dayStats}
           routeStats={routeStats}
           isLoading={isLoading}
           filter={filter}
+          onDayFilterChange={handleDayFilterChange}
           onFilterChange={setFilter}
         />
         {isLoading ? <StoreCardsSkeleton /> : <StoreCards stores={filteredStores} />}
