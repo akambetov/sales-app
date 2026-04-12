@@ -1,6 +1,7 @@
 import { AlertTriangle, ChevronRight } from 'lucide-react'
+import { useState } from 'react'
 
-import { Card, Chip, Header } from '@components'
+import { Card, Chip, Header, Modal } from '@components'
 import { useAppNavigate } from '@hooks'
 import { useStoreByIdQuery, useProductsQuery } from '@queries'
 import { useVisitContext } from '@store'
@@ -17,6 +18,9 @@ const VisitSteps = () => {
     }
   })
   const { data: products } = useProductsQuery()
+  const [selectedStepId, setSelectedStepId] = useState<
+    (typeof VISIT_STEP_DEFINITIONS)[number]['id'] | null
+  >(null)
 
   if (!store || !products || !visitState) {
     return null
@@ -36,6 +40,7 @@ const VisitSteps = () => {
 
   const orderAmount = currentOrderItems.reduce((sum, row) => sum + row.product.price * row.qty, 0)
   const orderSkuCount = currentOrderItems.length
+  const selectedStep = VISIT_STEP_DEFINITIONS.find((step) => step.id === selectedStepId) ?? null
 
   const requiredNotDone = VISIT_STEP_DEFINITIONS.filter(
     (s) => s.required && currentVisit.stepStatuses[s.id] === 'Не начат'
@@ -98,7 +103,9 @@ const VisitSteps = () => {
               <Card
                 key={step.id}
                 className="cursor-pointer p-4 transition hover:shadow-md"
-                // onClick={() => setPage(step.id as Page)}
+                onClick={() => {
+                  setSelectedStepId(step.id)
+                }}
               >
                 <div className="flex items-start gap-3">
                   <div className="flex h-11 w-11 shrink-0 items-center justify-center rounded-2xl bg-slate-100 text-slate-700">
@@ -134,6 +141,53 @@ const VisitSteps = () => {
           })}
         </div>
       </div>
+      <Modal
+        open={Boolean(selectedStep)}
+        title={selectedStep?.title ?? ''}
+        description={selectedStep?.description}
+        onClose={() => {
+          setSelectedStepId(null)
+        }}
+      >
+        {selectedStep ? (
+          <div className="space-y-4">
+            <div className="flex items-center gap-3 rounded-2xl bg-slate-50 p-3">
+              <div className="flex h-11 w-11 shrink-0 items-center justify-center rounded-2xl bg-white text-slate-700 shadow-sm">
+                <selectedStep.icon size={18} />
+              </div>
+              <div className="min-w-0">
+                <div className="text-sm font-medium text-slate-900">{selectedStep.title}</div>
+                <div className="mt-1 text-xs text-slate-500">
+                  {selectedStep.required ? 'Обязательный шаг визита' : 'Рекомендуемый шаг визита'}
+                </div>
+              </div>
+            </div>
+            <div className="flex items-center justify-between rounded-2xl border border-slate-200 px-3 py-2.5">
+              <span className="text-sm text-slate-500">Текущий статус</span>
+              <span
+                className={cn(
+                  'inline-flex rounded-full border px-2.5 py-1 text-[11px] font-medium',
+                  statusTone(currentVisit.stepStatuses[selectedStep.id])
+                )}
+              >
+                {currentVisit.stepStatuses[selectedStep.id]}
+              </span>
+            </div>
+            <div className="rounded-2xl border border-dashed border-slate-200 p-3 text-sm text-slate-600">
+              Детальная форма для шага `{selectedStep.title}` в разработке.
+            </div>
+            <button
+              type="button"
+              className="w-full rounded-3xl bg-slate-900 px-4 py-3 text-sm font-semibold text-white"
+              onClick={() => {
+                setSelectedStepId(null)
+              }}
+            >
+              Закрыть
+            </button>
+          </div>
+        ) : null}
+      </Modal>
     </div>
   )
 }

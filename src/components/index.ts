@@ -17,3 +17,5 @@ export { ButtonSave } from './button-save'
 export { SearchInput } from './search-input'
 
 export { Select } from './select'
+
+export { Modal } from './modal'
