@@ -20,7 +20,8 @@ export const storesSeed: IStore[] = [
     priority: true,
     risk: true,
     shelfRisk: true,
-    status: 'Не начат'
+    status: 'Не начат',
+    draft: true
   },
   {
     id: 2,
@@ -39,7 +40,8 @@ export const storesSeed: IStore[] = [
     visitWindow: '11:00–11:20',
     workDay: 'monday',
     noOrderRisk: true,
-    status: 'Не начат'
+    status: 'Не начат',
+    draft: true
   },
   {
     id: 3,
@@ -58,7 +60,8 @@ export const storesSeed: IStore[] = [
     visitWindow: '12:10–12:30',
     workDay: 'tuesday',
     priority: true,
-    status: 'Не начат'
+    status: 'Не начат',
+    draft: true
   },
   {
     id: 4,
@@ -76,7 +79,8 @@ export const storesSeed: IStore[] = [
     overdueDebt: 0,
     visitWindow: '13:00–13:10',
     workDay: 'wednesday',
-    status: 'Завершен'
+    status: 'Завершен',
+    draft: false
   },
   {
     id: 5,
@@ -95,6 +99,7 @@ export const storesSeed: IStore[] = [
     visitWindow: '14:10–14:40',
     workDay: 'friday',
     risk: true,
-    status: 'Не начат'
+    status: 'Не начат',
+    draft: false
   }
 ]

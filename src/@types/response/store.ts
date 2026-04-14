@@ -21,4 +21,5 @@ export interface IStore {
   noOrderRisk?: boolean
   shelfRisk?: boolean
   status: TVisitStatus
+  draft: boolean
 }
