@@ -25,6 +25,11 @@ const StoreDetailsPage = () => {
     navigate('/')
   }
 
+  const handleVisit = (storeId: number) => {
+    startVisit(storeId)
+    navigate(`/store/${storeId}/visit-steps`)
+  }
+
   if (!store) {
     return null
   }
@@ -55,7 +60,7 @@ const StoreDetailsPage = () => {
       <ButtonSave
         label={visitState?.[store.id]?.started ? 'Продолжить визит' : 'Начать визит'}
         onClick={() => {
-          startVisit(store.id)
+          handleVisit(store.id)
         }}
       />
     </div>

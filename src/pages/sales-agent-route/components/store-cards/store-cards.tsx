@@ -15,6 +15,7 @@ const StoreCards = ({ stores }: { stores: IStore[] }) => {
   }
 
   const handleVisit = (storeId: number) => {
+    startVisit(storeId)
     navigate(`/store/${storeId}/visit-steps`)
   }
 
@@ -100,7 +101,6 @@ const StoreCards = ({ stores }: { stores: IStore[] }) => {
                 className="cursor-pointer rounded-2xl bg-slate-900 px-3 py-3 text-sm font-semibold text-white"
                 onClick={(e) => {
                   e.stopPropagation()
-                  startVisit(store.id)
                   handleVisit(store.id)
                 }}
               >

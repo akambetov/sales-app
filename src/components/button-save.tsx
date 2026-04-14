@@ -14,7 +14,7 @@ export const ButtonSave = ({
       onClick={onClick}
       disabled={disabled}
       className={cn(
-        'w-full rounded-3xl px-4 py-4 text-sm font-semibold text-white shadow-xl',
+        'w-full rounded-3xl px-4 py-4 text-sm font-semibold text-white shadow-xl cursor-pointer',
         disabled ? 'bg-slate-300' : 'bg-slate-900'
       )}
     >
