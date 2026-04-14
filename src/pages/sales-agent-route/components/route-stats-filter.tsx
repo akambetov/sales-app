@@ -19,7 +19,9 @@ const DAY_FILTERS: { label: string; key: TRouteDayFilter }[] = [
   { label: 'Вторник', key: 'tuesday' },
   { label: 'Среда', key: 'wednesday' },
   { label: 'Четверг', key: 'thursday' },
-  { label: 'Пятница', key: 'friday' }
+  { label: 'Пятница', key: 'friday' },
+  { label: 'Суббота', key: 'saturday' },
+  { label: 'Воскресенье', key: 'sunday' }
 ]
 
 const getDateByOffset = (offset: number) => {

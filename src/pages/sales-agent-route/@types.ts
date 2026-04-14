@@ -8,4 +8,12 @@ export interface IRouteStats {
   priority: number
 }
 
-export type TRouteDayFilter = 'all' | 'monday' | 'tuesday' | 'wednesday' | 'thursday' | 'friday'
+export type TRouteDayFilter =
+  | 'all'
+  | 'monday'
+  | 'tuesday'
+  | 'wednesday'
+  | 'thursday'
+  | 'friday'
+  | 'saturday'
+  | 'sunday'

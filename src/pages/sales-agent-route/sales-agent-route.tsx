@@ -55,7 +55,9 @@ const SalesAgentRoute = () => {
       tuesday: stores?.filter((s) => s.workDay === 'tuesday').length ?? 0,
       wednesday: stores?.filter((s) => s.workDay === 'wednesday').length ?? 0,
       thursday: stores?.filter((s) => s.workDay === 'thursday').length ?? 0,
-      friday: stores?.filter((s) => s.workDay === 'friday').length ?? 0
+      friday: stores?.filter((s) => s.workDay === 'friday').length ?? 0,
+      saturday: stores?.filter((s) => s.workDay === 'saturday').length ?? 0,
+      sunday: stores?.filter((s) => s.workDay === 'sunday').length ?? 0
     }),
     [stores]
   )

@@ -15,7 +15,7 @@ export interface IStore {
   debt: number
   overdueDebt: number
   visitWindow: string
-  workDay: 'monday' | 'tuesday' | 'wednesday' | 'thursday' | 'friday'
+  workDay: 'monday' | 'tuesday' | 'wednesday' | 'thursday' | 'friday' | 'saturday' | 'sunday'
   priority?: boolean
   risk?: boolean
   noOrderRisk?: boolean
