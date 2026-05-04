@@ -1,22 +1,27 @@
-import { useNavigate } from 'react-router'
-
 import { Card, Chip } from '@components'
 import { useVisitContext } from '@store'
 import { cn, money, statusTone } from '@utils'
 
 import type { IStore } from '@types'
 
-const StoreCards = ({ stores }: { stores: IStore[] }) => {
-  const navigate = useNavigate()
+const StoreCards = ({
+  stores,
+  onSelectStore,
+  onVisitStore
+}: {
+  stores: IStore[]
+  onSelectStore: (storeId: IStore['id']) => void
+  onVisitStore: (storeId: IStore['id']) => void
+}) => {
   const { visitState, startVisit } = useVisitContext()
 
-  const handleSelectStore = (storeId: number) => () => {
-    navigate(`/store/${storeId}`)
+  const handleSelectStore = (storeId: IStore['id']) => () => {
+    onSelectStore(storeId)
   }
 
-  const handleVisit = (storeId: number) => {
+  const handleVisit = (storeId: IStore['id']) => {
     startVisit(storeId)
-    navigate(`/store/${storeId}/visit-steps`)
+    onVisitStore(storeId)
   }
 
   return (

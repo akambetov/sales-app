@@ -1,5 +1,6 @@
 import { Bell } from 'lucide-react'
-import { useMemo, useState } from 'react'
+import { useCallback, useMemo, useState } from 'react'
+import { useNavigate } from 'react-router'
 
 import { Header, Avatar, Card, SearchInput } from '@components'
 import { useUser } from '@contexts'
@@ -7,7 +8,7 @@ import { useStoresQuery } from '@queries'
 import { useVisitContext } from '@store'
 import { cn } from '@utils'
 
-import { Metrics, RouteStatsFilter, StoreCards, StoreCardsSkeleton } from './components'
+import { Metrics, RouteMap, RouteStatsFilter, StoreCards, StoreCardsSkeleton } from './components'
 
 import type { IRouteStats, TRouteDayFilter } from './@types'
 import type { IStore } from '@types'
@@ -21,6 +22,7 @@ const getMatchedSearch = ({ stores, search }: { stores: IStore[]; search: string
 }
 
 const SalesAgentRoute = () => {
+  const navigate = useNavigate()
   const user = useUser()
   const { initVisit } = useVisitContext()
   const { data: stores, isLoading } = useStoresQuery({ onSuccess: initVisit })
@@ -127,6 +129,20 @@ const SalesAgentRoute = () => {
     setFilter('total')
   }
 
+  const handleSelectStore = useCallback(
+    (storeId: IStore['id']) => {
+      navigate(`/store/${storeId}`)
+    },
+    [navigate]
+  )
+
+  const handleVisitStore = useCallback(
+    (storeId: IStore['id']) => {
+      navigate(`/store/${storeId}/visit-steps`)
+    },
+    [navigate]
+  )
+
   return (
     <>
       <Header
@@ -185,7 +201,16 @@ const SalesAgentRoute = () => {
           onDayFilterChange={handleDayFilterChange}
           onFilterChange={setFilter}
         />
-        {isLoading ? <StoreCardsSkeleton /> : <StoreCards stores={filteredStores} />}
+        <RouteMap stores={filteredStores} isLoading={isLoading} onSelectStore={handleSelectStore} />
+        {isLoading ? (
+          <StoreCardsSkeleton />
+        ) : (
+          <StoreCards
+            stores={filteredStores}
+            onSelectStore={handleSelectStore}
+            onVisitStore={handleVisitStore}
+          />
+        )}
       </div>
     </>
   )

@@ -1,0 +1,25 @@
+.route-map-marker {
+  align-items: center;
+  background: var(--route-marker-color);
+  border: 2px solid #ffffff;
+  border-radius: 9999px;
+  box-shadow: 0 10px 24px rgb(15 23 42 / 28%);
+  color: #ffffff;
+  display: inline-flex;
+  font-size: 12px;
+  font-weight: 700;
+  height: 30px;
+  justify-content: center;
+  line-height: 1;
+  width: 30px;
+}
+
+.route-map-tooltip {
+  border: 1px solid rgb(226 232 240);
+  border-radius: 12px;
+  box-shadow: 0 10px 22px rgb(15 23 42 / 16%);
+  color: #334155;
+  font-size: 12px;
+  line-height: 1.35;
+  padding: 8px 10px;
+}
