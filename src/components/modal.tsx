@@ -26,7 +26,7 @@ export const Modal = ({
       <button
         type="button"
         aria-label="Закрыть модальное окно"
-        className="absolute inset-0 cursor-default"
+        className="absolute inset-0"
         onClick={onClose}
       />
       <div
